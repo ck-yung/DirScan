@@ -23,16 +23,17 @@ exclDirWild: new string[] { "temp*", "tmp*" }))
 
 * Complex example,
 ```
-bool CheckDir(string dirname)
+bool CheckDir(string dirbase, string dirthe)
 {
+    var dirname = Path.Combine(dirbase, dirthe);
     if (!Directory.Exists(dirname)) return false;
     var info = new DirectoryInfo(dirname);
     var timeDiff = DateTime.Now.Subtract(info.LastWriteTime);
-    return timeDiff < TimeSpan.FromHours(2);
+    var rtn = timeDiff < TimeSpan.FromHours(2);
+    return rtn;
 }
 
-foreach (var nameThe in Scan.ListFiles("", filterDirname: CheckDir)
-    .Take(12))
+foreach (var nameThe in Scan.ListFiles("", filterDirname: CheckDir))
 {
     Console.WriteLine(nameThe);
 }

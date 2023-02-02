@@ -11,7 +11,7 @@ public static class Scan
     /// <remarks>See <link>https://github.com/ck-yung/DirScan/blob/main/README.md</link></remarks>
     static public IEnumerable<string> ListFiles(string path)
     {
-        return ListFiles(path, Always<string>.True);
+        return ListFiles(path, Always<string, string>.True);
     }
 
     /// <summary>
@@ -28,9 +28,9 @@ public static class Scan
         var wilds = exclDirWild
             .Select((it) => Wild.ToMatch(it, caseSensitive))
             .ToArray();
-        Func<string, bool> allowDir = (exclDirWild.Count() == 0)
-            ? Always<string>.True
-            : (it) => wilds.All((wild) => false == wild(it));
+        Func<string, string, bool> allowDir = (exclDirWild.Count() == 0)
+            ? Always<string, string>.True
+            : (_, it) => wilds.All((wild) => false == wild(it));
         return ListFiles(path, allowDir);
     }
 
@@ -38,11 +38,11 @@ public static class Scan
     /// Scan file recursively
     /// </summary>
     /// <param name="path">Base directory</param>
-    /// <param name="filterDirname">Function (lambda) to filter dirname</param>
+    /// <param name="filterDirname">Function (predicate lambda) to filter (dirbase, dirname)</param>
     /// <returns>All filename under the base directory satifying 'filterDirname'</returns>
     /// <remarks>See <link>https://github.com/ck-yung/DirScan/blob/main/README.md</link></remarks>
     static public IEnumerable<string> ListFiles(string path,
-        Func<string, bool> filterDirname)
+        Func<string, string, bool> filterDirname)
     {
         if (path == null) path = string.Empty;
 
@@ -71,8 +71,9 @@ public static class Scan
             {
                 var currentDirname = SafeGetCurrent(enumDir);
                 if (string.IsNullOrEmpty(currentDirname)) continue;
-                if (false == filterDirname(Path.GetFileName(
-                    currentDirname) ?? string.Empty))
+                if (false == filterDirname(
+                    Path.GetDirectoryName(currentDirname) ?? string.Empty,
+                    Path.GetFileName(currentDirname) ?? string.Empty))
                 {
                     continue;
                 }

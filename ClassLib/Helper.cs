@@ -8,6 +8,11 @@ internal class Always<T>
     static public readonly Func<T, bool> True = (_) => true;
 }
 
+internal class Always<T, T2>
+{
+    static public readonly Func<T, T2, bool> True = (_, _) => true;
+}
+
 static internal class Wild
 {
     static internal StringComparer StringComparer
