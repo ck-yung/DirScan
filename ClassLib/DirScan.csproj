@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
+    <Title>DirScan</Title>
+    <Version>0.0.0.1</Version>
+    <Authors>Yung, Chun Kau</Authors>
+    <Company>yung.chun.kau@gmail.com</Company>
+    <Description>Provide IEnumerable functions for recursively scanning file.</Description>
+    <Copyright>Yung, Chun Kau</Copyright>
+    <PackageProjectUrl>https://github.com/ck-yung/DirScan</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ck-yung/DirScan</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>dir-scan; dir-linq</PackageTags>
+    <PackageReleaseNotes>Scan file recursively</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
