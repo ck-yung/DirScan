@@ -23,6 +23,7 @@ exclDirWild: new string[] { "temp*", "tmp*" }))
 
 * Complex example,
 ```
+using Dir;
 bool CheckDir(string dirbase, string dirthe)
 {
     var dirname = Path.Combine(dirbase, dirthe);
@@ -39,5 +40,5 @@ foreach (var nameThe in Scan.ListFiles("", filterDirname: CheckDir))
 }
 ```
 
-2023 Yung, Chun Kau<br/>
+<p>2023 Yung, Chun Kau</p>
 yung.chun.kau@gmail.com

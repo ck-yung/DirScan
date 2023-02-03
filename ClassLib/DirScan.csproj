@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <BaseOutputPath>..\bin\</BaseOutputPath>
     <Title>DirScan</Title>
-    <Version>0.9.1.1</Version>
+    <Version>0.9.1.2</Version>
     <Authors>Yung, Chun Kau</Authors>
     <Company>yung.chun.kau@gmail.com</Company>
     <Description>Provide IEnumerable functions for recursively scanning file.</Description>
