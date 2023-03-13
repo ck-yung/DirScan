@@ -13,20 +13,12 @@ internal class Always<T, T2>
     static public readonly Func<T, T2, bool> True = (_, _) => true;
 }
 
-static internal class Wild
+static public class Wild
 {
-    static internal StringComparer StringComparer
-    { get; private set; } = StringComparer.OrdinalIgnoreCase;
-
-    static internal Func<string, bool, Regex> MakeRegex
-    { get; private set; } = (it, flag) => new Regex(it,
-        flag ? RegexOptions.None : RegexOptions.IgnoreCase);
-
-    static internal Func<string, string> ToRegexText
-    { get; private set; } = (it) =>
+    static public string ToRegexText(this string text)
     {
         var regText = new StringBuilder("^");
-        regText.Append(it
+        regText.Append(text
             .Replace(@"\", @"\\")
             .Replace("^", @"\^")
             .Replace("$", @"\$")
@@ -41,13 +33,39 @@ static internal class Wild
             .Replace("}", @"\}")
             ).Append('$');
         return regText.ToString();
-    };
+    }
 
-    static internal Func<string, bool> ToMatch(string arg,
+    static public Regex MakeRegex(this string text,
         bool caseSensitive = false)
     {
-        var regThe = MakeRegex(ToRegexText(arg), caseSensitive);
-        return (it) => regThe.Match(it).Success;
+        return new Regex(text, caseSensitive
+            ? RegexOptions.None : RegexOptions.IgnoreCase);
+    }
+
+    /// <summary>
+    /// DO NOT put in LINQ clause.
+    /// 'where "*.txt".ToWildMatch()(toBeCheckedText)' is POOR.
+    /// </summary>
+    static public Func<string, bool> ToWildMatch(this string arg,
+        bool caseSensitive = false)
+    {
+        var regexThe = arg.ToRegexText().MakeRegex(caseSensitive);
+        return (it) => regexThe.Match(it).Success;
+    }
+
+    /// <summary>
+    /// DO NOT put in LINQ clause.
+    /// 'where wilds.ToWildMatch()(toBeCheckedText)' is POOR.
+    /// </summary>
+    static public Func<string, bool> ToWildMatch(this IEnumerable<string> args,
+        bool caseSensitive = false)
+    {
+        var likeCsTxtFileChecking = args
+            .Select((it) => it.ToWildMatch(caseSensitive))
+            .ToArray();
+        return (likeCsTxtFileChecking.Length == 0)
+            ? (it) => true
+            : (it) => likeCsTxtFileChecking.Any((check) => check(it));
     }
 }
 

@@ -2,6 +2,8 @@
 Scan file recursively [enumerable]
 
 ## Examples
+### [See demo](https://github.com/ck-yung/DirScan/blob/main/DemoCs/Program.cs)
+
 * To get all files on current directory,
 ```
 using Dir;

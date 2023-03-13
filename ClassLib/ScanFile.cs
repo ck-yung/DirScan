@@ -18,6 +18,26 @@ public static class Scan
     /// Scan file recursively
     /// </summary>
     /// <param name="path">Base directory</param>
+    /// <param name="exclDir">excl dir wild</param>
+    /// <param name="caseSensitive">true if Case-Sensitvie</param>
+    /// <returns>All filename under the base directory excluding to 'exclDirWild'</returns>
+    /// <remarks>See <link>https://github.com/ck-yung/DirScan/blob/main/README.md</link></remarks>
+    static public IEnumerable<string> ListFiles(string path,
+        string exclDir, bool caseSensitive = false)
+    {
+        Func<string, string, bool> allowDir = Always<string, string>.True;
+        if (!string.IsNullOrEmpty(exclDir))
+        {
+            var wildThe = exclDir.ToWildMatch(caseSensitive);
+            allowDir = (_, dirthe) => false == wildThe(dirthe);
+        }
+        return ListFiles(path, allowDir);
+    }
+
+    /// <summary>
+    /// Scan file recursively
+    /// </summary>
+    /// <param name="path">Base directory</param>
     /// <param name="exclDirWild">array/list of excl dir wild</param>
     /// <param name="caseSensitive">true if Case-Sensitvie</param>
     /// <returns>All filename under the base directory excluding to 'exclDirWild'</returns>
@@ -25,12 +45,12 @@ public static class Scan
     static public IEnumerable<string> ListFiles(string path,
         IEnumerable<string> exclDirWild, bool caseSensitive = false)
     {
-        var wilds = exclDirWild
-            .Select((it) => Wild.ToMatch(it, caseSensitive))
+        var wildFuncs = exclDirWild
+            .Select((it) => it.ToWildMatch(caseSensitive))
             .ToArray();
         Func<string, string, bool> allowDir = (exclDirWild.Count() == 0)
             ? Always<string, string>.True
-            : (_, it) => wilds.All((wild) => false == wild(it));
+            : (_, it) => wildFuncs.All((check) => false == check(it));
         return ListFiles(path, allowDir);
     }
 
