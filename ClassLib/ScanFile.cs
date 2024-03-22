@@ -110,4 +110,56 @@ public static class Scan
             yield return filenameThe.Substring(pathLen);
         }
     }
+
+    /// <summary>
+    /// Non-recursively search sub-directories.
+    /// </summary>
+    static public IEnumerable<string> SimpleListFiles(string path)
+    {
+        if (path == null) path = string.Empty;
+
+        if (path.EndsWith(":") || string.IsNullOrEmpty(path))
+        {
+            path += ".";
+        }
+
+        if (!path.EndsWith(Path.DirectorySeparatorChar))
+        {
+            path += Path.DirectorySeparatorChar;
+        }
+
+        var enumFile = SafeGetFileEnumerator(path);
+        while (SafeMoveNext(enumFile))
+        {
+            var currentThe = SafeGetCurrent(enumFile);
+            if (string.IsNullOrEmpty(currentThe)) continue;
+            yield return currentThe;
+        }
+    }
+
+    /// <summary>
+    /// Non-recursively search sub-directories.
+    /// </summary>
+    static public IEnumerable<string> SimpleListDirectories(string path)
+    {
+        if (path == null) path = string.Empty;
+
+        if (path.EndsWith(":") || string.IsNullOrEmpty(path))
+        {
+            path += ".";
+        }
+
+        if (!path.EndsWith(Path.DirectorySeparatorChar))
+        {
+            path += Path.DirectorySeparatorChar;
+        }
+
+        var enumFile = SafeGetDirectoryEnumerator(path);
+        while (SafeMoveNext(enumFile))
+        {
+            var currentThe = SafeGetCurrent(enumFile);
+            if (string.IsNullOrEmpty(currentThe)) continue;
+            yield return currentThe;
+        }
+    }
 }

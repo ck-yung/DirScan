@@ -15,6 +15,10 @@ internal class Always<T, T2>
 
 static public class Wild
 {
+    /// <summary>
+    /// To match just starting and ending. For example,
+    ///  "abbc" is matched by "a*c" but NOT "b*c" nor "a*b".
+    /// </summary>
     static public string ToRegexText(this string text)
     {
         var regText = new StringBuilder("^");
@@ -23,6 +27,7 @@ static public class Wild
             .Replace("^", @"\^")
             .Replace("$", @"\$")
             .Replace(".", @"\.")
+            .Replace("+", @"\+")
             .Replace("?", ".")
             .Replace("*", ".*")
             .Replace("(", @"\(")
@@ -32,6 +37,31 @@ static public class Wild
             .Replace("{", @"\{")
             .Replace("}", @"\}")
             ).Append('$');
+        return regText.ToString();
+    }
+
+    /// <summary>
+    /// To match just starting and ending. For example,
+    /// "x-abbc-y" is matched by "a*c" but not "b*c" or "a*b"
+    /// </summary>
+    static public string ToRegexBoundaryText(this string text)
+    {
+        var regText = new StringBuilder(@"\b");
+        regText.Append(text
+            .Replace(@"\", @"\\")
+            .Replace("^", @"\^")
+            .Replace("$", @"\$")
+            .Replace(".", @"\.")
+            .Replace("+", @"\+")
+            .Replace("?", ".")
+            .Replace("*", ".*")
+            .Replace("(", @"\(")
+            .Replace(")", @"\)")
+            .Replace("[", @"\[")
+            .Replace("]", @"\]")
+            .Replace("{", @"\{")
+            .Replace("}", @"\}")
+            ).Append(@"\b");
         return regText.ToString();
     }
 
